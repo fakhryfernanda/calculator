@@ -7,6 +7,16 @@
     margin-bottom: 5px;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 5px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.result {
+    height: 20px;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 0 0.4rem;
 }
 
 .control {
@@ -35,7 +45,7 @@
     background-color: hsl(200,12%,95%);;
 }
 
-.button.operator {
+.button.symbol {
     background-color: hsl(220,9%,87%);
 }
 
