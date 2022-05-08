@@ -1,50 +1,107 @@
 const calculator = document.querySelector('.calculator');
+const resultDiv = calculator.querySelector('.result');
 const numbers = calculator.querySelectorAll('[data-button="number"]');
+const operators = calculator.querySelectorAll('[data-button*="operator"]');
+const equalSign = calculator.querySelector('[data-button="equal-sign"]');
 const clearButton = calculator.querySelector('[data-button="clear"]');
 
-let resultVal = 0;
+const myCalc = new Calculator();
+
+// VARIABLES
+
+let operatorClicked = false;
+let equalSignClicked = false;
+
+let monitorText = '';
+let currentValue = 0;
+let variables = [];
+
+// NUMBERS
 
 numbers.forEach(number => {
     number.addEventListener('click', e => {
     
-    resultVal = 10*resultVal + parseInt(e.target.innerText);
-    showResult(resultVal);
+    currentValue = 10*currentValue + parseInt(e.target.innerText);
+    monitorText += e.target.innerText;
+    updateMonitor(monitorText);
 
     });
 });
 
-clearButton.addEventListener('click', clearMonitor);
+// OPERATORS
 
-function showResult(value) {
+!operatorClicked && operators.forEach(operator => {
+    operator.addEventListener('click', (e) => {
+        operatorClicked = true;
+
+        variables.push(currentValue);
+        variables.push(e.target.getAttribute('data-button'));
+        monitorText += ' ' + e.target.innerText + ' ';
+        currentValue = 0;
+
+        updateMonitor(monitorText);
+    });
+});
+
+// EQUAL SIGN
+
+!equalSignClicked && equalSign.addEventListener('click', (e) => {
+    equalSignClicked = true;
+
+    variables.push(currentValue);
+    variables.push(e.target.getAttribute('data-button'));
+    monitorText += ' ' + e.target.innerText + ' ';
+    currentValue = myCalc.calculate(variables[0], variables[2], variables[1]);
+    variables.push(currentValue);
+    monitorText += currentValue;
+    updateMonitor(monitorText);
+});
+
+// CLEAR MONITOR
+
+clearButton.addEventListener('click', clearAll);
+
+// FUNCTIONS
+
+function updateMonitor(value) {
     const resultDiv = calculator.querySelector('.result');
     resultDiv.innerText = value;
 };
 
-function clearMonitor() {
-    resultVal = 0;
-    showResult(0);
+function clearAll() {
+    operatorClicked = false;
+    equalSignClicked = false;
+    variables = [];
+
+    currentValue = 0;
+    monitorText = '';
+    updateMonitor(0);
 };
 
-function add(a,b) {return (a + b)};
-function subtract(a,b) {return (a - b)};
-function multiply(a,b) {return (a * b)};
-function divide(a,b) {return (a / b)};
+function Calculator() {
+    this.add = (a,b) => a + b;
+    this.substract = (a,b) => a - b;
+    this.multiply = (a,b) => a * b;
+    this.divide = (a,b) => a / b;
 
-function operate(leftOperand, rightOperand, operator) {
-    switch(operator) {
-        case 'add':
-            return add(leftOperand, rightOperand);
-            break;
-        case 'substract':
-            return substract(leftOperand, rightOperand);
-            break;
-        case 'multiply':
-            return multiply(leftOperand, rightOperand);
-            break;        
-        case 'divide':
-            return divide(leftOperand, rightOperand);
-            break;    
-    
-    }
+    this.calculate = function(a,b,operator) {
+        switch(operator) {
+            case 'add-operator':
+                return this.add(a,b);
+                break;
+            case 'substract-operator':
+                return this.substract(a,b);
+                break;
+            case 'multiply-operator':
+                return this.multiply(a,b);
+                break;        
+            case 'divide-operator':
+                if (b !== 0) {
+                    return this.divide(a,b);
+                } else {
+                    alert("You can't divide by zero")
+                }
+                break;
+        };
+    };
 };
-
