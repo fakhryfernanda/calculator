@@ -33,6 +33,7 @@ numbers.forEach(number => {
 !operatorClicked && operators.forEach(operator => {
     operator.addEventListener('click', (e) => {
         operatorClicked = true;
+        if (monitorText === '') {monitorText += '0'};
 
         variables.push(currentValue);
         variables.push(e.target.getAttribute('data-button'));
@@ -63,9 +64,9 @@ clearButton.addEventListener('click', clearAll);
 
 // FUNCTIONS
 
-function updateMonitor(value) {
+function updateMonitor(monitorText) {
     const resultDiv = calculator.querySelector('.result');
-    resultDiv.innerText = value;
+    resultDiv.innerText = monitorText;
 };
 
 function clearAll() {
@@ -88,13 +89,10 @@ function Calculator() {
         switch(operator) {
             case 'add-operator':
                 return this.add(a,b);
-                break;
             case 'substract-operator':
                 return this.substract(a,b);
-                break;
             case 'multiply-operator':
-                return this.multiply(a,b);
-                break;        
+                return this.multiply(a,b);        
             case 'divide-operator':
                 if (b !== 0) {
                     return this.divide(a,b);
