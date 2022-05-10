@@ -12,7 +12,7 @@ const myCalc = new Calculator();
 let operatorClicked = false;
 let equalSignClicked = false;
 
-let monitorText = '';
+let resultText = '';
 let currentValue = 0;
 let variables = [];
 
@@ -21,9 +21,15 @@ let variables = [];
 numbers.forEach(number => {
     number.addEventListener('click', e => {
     
+    if (variables.length === 5) {
+        monitorCalculation(`Ans = ${variables[4]}`);
+        variables = [];
+        resultText = '';
+        currentValue = 0;
+    };
     currentValue = 10*currentValue + parseInt(e.target.innerText);
-    monitorText += e.target.innerText;
-    updateMonitor(monitorText);
+    resultText += e.target.innerText;
+    monitorResult(resultText);
 
     });
 });
@@ -33,14 +39,14 @@ numbers.forEach(number => {
 !operatorClicked && operators.forEach(operator => {
     operator.addEventListener('click', (e) => {
         operatorClicked = true;
-        if (monitorText === '') {monitorText += '0'};
+        if (resultText === '') {resultText += '0'};
 
         variables.push(currentValue);
         variables.push(e.target.getAttribute('data-button'));
-        monitorText += ' ' + e.target.innerText + ' ';
+        resultText += ' ' + e.target.innerText + ' ';
         currentValue = 0;
 
-        updateMonitor(monitorText);
+        monitorResult(resultText);
     });
 });
 
@@ -51,11 +57,13 @@ numbers.forEach(number => {
 
     variables.push(currentValue);
     variables.push(e.target.getAttribute('data-button'));
-    monitorText += ' ' + e.target.innerText + ' ';
+    resultText += ' ' + e.target.innerText + ' ';
+    // calculationText = resultText;
+    monitorCalculation(resultText);
     currentValue = myCalc.calculate(variables[0], variables[2], variables[1]);
     variables.push(currentValue);
-    monitorText += currentValue;
-    updateMonitor(monitorText);
+    resultText += currentValue;
+    monitorResult(currentValue);
 });
 
 // CLEAR MONITOR
@@ -64,9 +72,14 @@ clearButton.addEventListener('click', clearAll);
 
 // FUNCTIONS
 
-function updateMonitor(monitorText) {
+function monitorCalculation(calculationText) {
+    const calculationDiv = calculator.querySelector('.previous-calculation');
+    calculationDiv.innerText = calculationText;
+};
+
+function monitorResult(resultText) {
     const resultDiv = calculator.querySelector('.result');
-    resultDiv.innerText = monitorText;
+    resultDiv.innerText = resultText;
 };
 
 function clearAll() {
@@ -75,8 +88,8 @@ function clearAll() {
     variables = [];
 
     currentValue = 0;
-    monitorText = '';
-    updateMonitor(0);
+    resultText = '';
+    monitorResult(0);
 };
 
 function Calculator() {
