@@ -3,20 +3,30 @@
 }
 
 .monitor {
-    height: 50px;
+    height: 35px;
     margin-bottom: 5px;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 5px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0;
+}
+
+.previous-calculation {
+    height: 12px;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 0 5px;
+    font-size: 0.6rem;
+    color: rgba(0,0,0,0.7);
 }
 
 .result {
     height: 20px;
-    /* border: 1px solid red; */
     display: flex;
     flex-direction: row-reverse;
-    padding: 0 0.4rem;
+    padding: 0 5px;
 }
 
 .control {
@@ -52,5 +62,9 @@
 .button.equal-sign {
     background-color: hsl(217,89%,61%);
     color: white;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
