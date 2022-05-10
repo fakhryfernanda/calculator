@@ -8,6 +8,10 @@ const clearButton = calculator.querySelector('[data-button="clear"]');
 
 const myCalc = new Calculator();
 
+// DEBUGGING
+
+calculator.addEventListener('click', () => console.log(variables));
+
 // VARIABLES
 
 operationSign = {
@@ -50,9 +54,9 @@ numbers.forEach(number => {
         currentValue = 10*currentValue + parseInt(e.target.innerText);
 
         if (pointer === actions[0]) {
-            variables[0] = currentValue
+            variables[0] = currentValue;
         } else if (pointer === actions[2]) {
-            variables[2] = currentValue
+            variables[2] = currentValue;
         };
 
         monitorResult();
@@ -62,27 +66,29 @@ numbers.forEach(number => {
 // OPERATORS
 
 // memastikan operator tidak muncul dua kali
-!operatorClicked && operators.forEach(operator => {
-    operator.addEventListener('click', (e) => {
+operators.forEach(operator => {
+    if (!operatorClicked) {
+        operator.addEventListener('click', (e) => {
         
-        // menandai bahwa operator sudah ditekan
-        operatorClicked = true;
-
-        // jika operator ditekan sebelum memasukkan leftOperand, otomatis leftOperand = 0
-        if (variables[0] === undefined) {
-            variables[0] = 0;
-        };
-
-        // memindahkan pointer
-        pointer = actions[1];
-
-        // memasukkan operator ke array variables
-        variables[1] = e.target.getAttribute('data-button');
-
-        currentValue = 0;
-
-        monitorResult();
-    });
+            // menandai bahwa operator sudah ditekan
+            operatorClicked = true;
+    
+            // jika operator ditekan sebelum memasukkan leftOperand, otomatis leftOperand = 0
+            if (variables[0] === undefined) {
+                variables[0] = 0;
+            };
+    
+            // memindahkan pointer
+            pointer = actions[1];
+    
+            // memasukkan operator ke array variables
+            variables[1] = e.target.getAttribute('data-button');
+    
+            currentValue = 0;
+    
+            monitorResult();
+        });
+    };
 });
 
 // EQUAL SIGN
@@ -170,14 +176,16 @@ function backSpacing() {
             operatorClicked = false;
             pointer = actions[0];
             variables = variables.slice(0, -1);
+            currentValue = variables[0];
             break;
         case actions[2]:
             currentValue = Math.floor(currentValue / 10);
             variables[2] = currentValue;
             if (currentValue === 0) {
-                variables = variables.slice(0, -1);
-                pointer = actions[1];
-                currentValue = variables[0];
+                if (operatorClicked) {
+                    variables = variables.slice(0, -1);
+                    pointer = actions[1];
+                }
             };
             break;
         case actions[3]:
@@ -185,8 +193,7 @@ function backSpacing() {
             break;
     };
 
-    resultText = resultText.slice(0, -1);
-    monitorResult(resultText);
+    monitorResult();
 
     if (currentValue === 0) {
         monitorResult(0);
