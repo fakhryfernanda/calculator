@@ -8,10 +8,6 @@ const clearButton = calculator.querySelector('[data-button="clear"]');
 
 const myCalc = new Calculator();
 
-// DEBUGGING
-
-calculator.addEventListener('click', () => console.log(variables));
-
 // VARIABLES
 
 operationSign = {
@@ -33,6 +29,10 @@ let resultText = ''; // berkaitan dengan apa yang akan ditampilkan di monitor
 let variables = []; // riwayat operasi
 
 let history = []; // riwayat operasi sebelumnya
+
+// DEBUGGING
+
+calculator.addEventListener('click', () => console.log(variables));
 
 // NUMBERS
 
@@ -65,11 +65,11 @@ numbers.forEach(number => {
 
 // OPERATORS
 
-// memastikan operator tidak muncul dua kali
 operators.forEach(operator => {
+    // memastikan operator tidak dapat diklik dua kali
     if (!operatorClicked) {
         operator.addEventListener('click', (e) => {
-        
+
             // menandai bahwa operator sudah ditekan
             operatorClicked = true;
     
@@ -88,7 +88,7 @@ operators.forEach(operator => {
     
             monitorResult();
         });
-    };
+    }
 });
 
 // EQUAL SIGN
