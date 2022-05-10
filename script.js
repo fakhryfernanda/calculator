@@ -28,12 +28,15 @@ let currentValue = 0; // berkaitan dengan nilai asli leftOperand atau rightOpera
 let resultText = ''; // berkaitan dengan apa yang akan ditampilkan di monitor
 let variables = []; // riwayat operasi
 
+let history = []; // riwayat operasi sebelumnya
+
 // NUMBERS
 
 numbers.forEach(number => {
     number.addEventListener('click', e => {
 
         // jika perhitungan sebelumnya sudah selesai, tampilkan hasil perhitungan sebelumnya pada previous-calculation
+        // dan gunakan hasil sebelumnya sebagai leftOperand
         if (variables.length === 5) {
             clearAll();
         };
@@ -161,6 +164,7 @@ function backSpacing() {
     switch(pointer) {
         case actions[0]:
             currentValue = Math.floor(currentValue / 10);
+            variables[0] = currentValue;
             break;
         case actions[1]:
             operatorClicked = false;
@@ -169,6 +173,12 @@ function backSpacing() {
             break;
         case actions[2]:
             currentValue = Math.floor(currentValue / 10);
+            variables[2] = currentValue;
+            if (currentValue === 0) {
+                variables = variables.slice(0, -1);
+                pointer = actions[1];
+                currentValue = variables[0];
+            };
             break;
         case actions[3]:
             clearAll();
@@ -186,7 +196,9 @@ function backSpacing() {
 function clearAll() {
 
     pointer = null;
-    monitorCalculation();
+    if (variables.length === 5) {
+        monitorCalculation();
+    }
     monitorResult();
     pointer = actions[0];
     
