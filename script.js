@@ -66,57 +66,62 @@ numbers.forEach(number => {
 // OPERATORS
 
 operators.forEach(operator => {
-    // memastikan operator tidak dapat diklik dua kali
-    if (!operatorClicked) {
-        operator.addEventListener('click', (e) => {
-
+    operator.addEventListener('click', (e) => {
+        // memastikan operator tidak dapat diklik dua kali
+        if (!operatorClicked) {
             // menandai bahwa operator sudah ditekan
             operatorClicked = true;
-    
+
             // jika operator ditekan sebelum memasukkan leftOperand, otomatis leftOperand = 0
             if (variables[0] === undefined) {
                 variables[0] = 0;
             };
-    
+
             // memindahkan pointer
             pointer = actions[1];
-    
+
             // memasukkan operator ke array variables
             variables[1] = e.target.getAttribute('data-button');
-    
+
             currentValue = 0;
-    
+
             monitorResult();
-        });
-    }
+        };
+    });
 });
 
 // EQUAL SIGN
 
 // mencegah equal-sign ditekan dua kali
 !equalSignClicked && equalSign.addEventListener('click', (e) => {
-    // menandai equal-sign sudah ditekan
-    equalSignClicked = true;
+    if (variables.length >= 2) {
+        // menandai equal-sign sudah ditekan
+        equalSignClicked = true;
 
-    // memindahkan pointer
-    pointer = actions[3];
+        // memindahkan pointer
+        pointer = actions[3];
 
-    // memasukkan equal-sign ke array variables
-    variables[3] = e.target.getAttribute('data-button');
+        if (variables.length === 2) {
+            // jika rightOperand belum ditentukan nilainya
+            // buat rightOperand = 0
+            variables[2] = 0;
+        }
 
-    // menampilkan riwayat operasi pada previous-result div
-    monitorCalculation();
+        // memasukkan equal-sign ke array variables
+        variables[3] = e.target.getAttribute('data-button');
 
-    // melakukan perhitungan berdasarkan leftOperand, operator, dan rightOperand
-    currentValue = myCalc.calculate(variables[0], variables[2], variables[1]);
+        // menampilkan riwayat operasi pada previous-result div
+        monitorCalculation();
 
-    // memasukkan hasil perhitungan ke array variables
-    variables[4] = currentValue;
+        // melakukan perhitungan berdasarkan leftOperand, operator, dan rightOperand
+        currentValue = myCalc.calculate(variables[0], variables[2], variables[1]);
 
-    // console.log(variables);
-    
-    // menampilkan hasil perhitungan pada monitor
-    monitorResult();
+        // memasukkan hasil perhitungan ke array variables
+        variables[4] = currentValue;
+            
+        // menampilkan hasil perhitungan pada monitor
+        monitorResult();
+    };
 });
 
 // BACKSPACING
@@ -195,9 +200,9 @@ function backSpacing() {
 
     monitorResult();
 
-    if (currentValue === 0) {
-        monitorResult(0);
-    };
+    // if (currentValue === 0) {
+    //     monitorResult(0);
+    // };
 };
 
 function clearAll() {
@@ -206,6 +211,7 @@ function clearAll() {
     if (variables.length === 5) {
         monitorCalculation();
     }
+
     monitorResult();
     pointer = actions[0];
     
